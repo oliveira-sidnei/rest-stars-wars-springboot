@@ -47,6 +47,13 @@ public class Planeta {
 		this.clima = clima;
 		this.terreno = terreno;
 	}
+	
+	public Planeta(String nome, String clima, String terreno) {
+		this.nome = nome;
+		this.clima = clima;
+		this.terreno = terreno;
+	}
+
 	public String getNome() {
 		return nome;
 	}
