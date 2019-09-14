@@ -4,6 +4,9 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +29,7 @@ public class PlanetaController {
 	private PlanetaRepository planetaRepository;
 
 	@GetMapping
-	public List<PlanetaDto> listaPlanetas(String nomePlaneta) {
+	public List<PlanetaDto> listaPlanetas(@NotBlank String nomePlaneta) {
 		List<Planeta> listaPlanetas = new ArrayList<Planeta>();
 
 		if(nomePlaneta == null || nomePlaneta.trim().isEmpty())
@@ -38,7 +41,7 @@ public class PlanetaController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<PlanetaDto> cadastrarPlaneta(@RequestBody PlanetaForm planetaForm, UriComponentsBuilder  uriBuilder) {
+	public ResponseEntity<PlanetaDto> cadastrarPlaneta(@RequestBody @Valid PlanetaForm planetaForm, UriComponentsBuilder  uriBuilder) {
 
 		Planeta planeta = PlanetaForm.converteParaPlaneta(planetaForm);
 		

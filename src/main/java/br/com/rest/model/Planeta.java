@@ -6,8 +6,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @Entity(name = "PLANETA")
 public class Planeta {
@@ -17,19 +15,13 @@ public class Planeta {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "CODIGO")
 	private Long codigo;
-	
-	@NotNull
-	@Size(max = 50)
+		
 	@Column(name = "NOME")
 	private String nome;
-	
-	@NotNull
-	@Size(max = 50)
+
 	@Column(name = "CLIMA")
 	private String clima;
-	
-	@NotNull
-	@Size(max = 50)
+
 	@Column(name = "TERRENO")
 	private String terreno;
 

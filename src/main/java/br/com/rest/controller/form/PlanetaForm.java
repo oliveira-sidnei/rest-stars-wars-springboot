@@ -1,13 +1,22 @@
 package br.com.rest.controller.form;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 import br.com.rest.model.Planeta;
 
 public class PlanetaForm {
 
+	@NotBlank
+	@Size(max = 50)
 	private String nome;
 
+	@NotBlank
+	@Size(max = 50)
 	private String clima;
 
+	@NotBlank
+	@Size(max = 50)
 	private String terreno;
 
 	public String getNome() {
