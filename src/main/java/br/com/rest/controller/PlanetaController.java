@@ -9,7 +9,9 @@ import javax.validation.constraints.NotBlank;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +22,7 @@ import br.com.rest.controller.dto.PlanetaDto;
 import br.com.rest.controller.form.PlanetaForm;
 import br.com.rest.model.Planeta;
 import br.com.rest.repository.PlanetaRepository;
+import br.com.rest.utilities.Utilities;
 
 @RestController
 @RequestMapping(value = "/planetas")
@@ -50,5 +53,15 @@ public class PlanetaController {
 		URI uri = uriBuilder.path("/planetas/{id}").buildAndExpand(planeta.getCodigo()).toUri();
 
 		return ResponseEntity.created(uri).body(new PlanetaDto(planeta));
+	}
+	
+	@GetMapping("/{planetaID}")
+	public PlanetaDto buscaporId(@PathVariable String planetaID){
+		if(StringUtils.isEmpty(planetaID))
+			return null;
+			
+		Planeta planeta = planetaRepository.getOne(Utilities.converteParaLong(planetaID));
+		
+		return new PlanetaDto(planeta);
 	}
 }
