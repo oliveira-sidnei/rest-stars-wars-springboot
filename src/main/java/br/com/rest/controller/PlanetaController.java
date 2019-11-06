@@ -9,6 +9,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.NumberFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -37,15 +41,16 @@ public class PlanetaController {
 	private PlanetaRepository planetaRepository;
 
 	@GetMapping
-	public List<PlanetaDto> listaPlanetas(@NotBlank String nomePlaneta) {
-		List<Planeta> listaPlanetas = new ArrayList<Planeta>();
+	public Page<PlanetaDto> listaPlanetas(@NotBlank @RequestParam(required = false) String nomePlaneta, 
+			@RequestParam int pagina, @RequestParam int qtd) {
+		
+		Pageable paginacao = PageRequest.of(pagina, qtd);
 
 		if(StringUtils.isEmpty(nomePlaneta))
-			listaPlanetas = planetaRepository.findAll();
+			return PlanetaDto.converteParaDto(planetaRepository.findAll(paginacao));
 		else
-			listaPlanetas = planetaRepository.findByNome(nomePlaneta);
+			return PlanetaDto.converteParaDto(planetaRepository.findByNome(paginacao, nomePlaneta));
 
-		return PlanetaDto.converteParaDto(listaPlanetas);
 	}
 
 	@PostMapping

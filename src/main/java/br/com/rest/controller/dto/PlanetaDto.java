@@ -1,7 +1,6 @@
 package br.com.rest.controller.dto;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
 
 import br.com.rest.model.Planeta;
 
@@ -33,8 +32,7 @@ public class PlanetaDto {
 	public String getClima() {
 		return clima;
 	}
-	public static List<PlanetaDto> converteParaDto(List<Planeta> planetas) {
-		return planetas.stream().map(PlanetaDto :: new).collect(Collectors.toList());
-		
+	public static Page<PlanetaDto> converteParaDto(Page<Planeta> planetas) {
+		return planetas.map(PlanetaDto::new);		
 	}
 }
