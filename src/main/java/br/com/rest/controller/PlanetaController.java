@@ -1,8 +1,6 @@
 package br.com.rest.controller;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -12,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.NumberFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,9 +42,8 @@ public class PlanetaController {
 
 	@GetMapping
 	public Page<PlanetaDto> listaPlanetas(@NotBlank @RequestParam(required = false) String nomePlaneta, 
-			@RequestParam int pagina, @RequestParam int qtd) {
+			@PageableDefault(size = 2, page = 0)Pageable paginacao) {
 		
-		Pageable paginacao = PageRequest.of(pagina, qtd);
 
 		if(StringUtils.isEmpty(nomePlaneta))
 			return PlanetaDto.converteParaDto(planetaRepository.findAll(paginacao));
