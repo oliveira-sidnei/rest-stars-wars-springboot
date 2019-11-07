@@ -7,10 +7,10 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.NumberFormat;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +41,7 @@ public class PlanetaController {
 	private PlanetaRepository planetaRepository;
 
 	@GetMapping
+	@Cacheable(value = "listaPlanetas")
 	public Page<PlanetaDto> listaPlanetas(@NotBlank @RequestParam(required = false) String nomePlaneta, 
 			@PageableDefault(size = 2, page = 0)Pageable paginacao) {
 		
@@ -53,6 +54,7 @@ public class PlanetaController {
 	}
 
 	@PostMapping
+	@CacheEvict(value = "listaPlanetas", allEntries = true)
 	public ResponseEntity<PlanetaDto> cadastrarPlaneta(@RequestBody @Valid PlanetaForm planetaForm, UriComponentsBuilder  uriBuilder) {
 
 		Planeta planeta = PlanetaForm.converteParaPlaneta(planetaForm);
@@ -77,6 +79,7 @@ public class PlanetaController {
 
 	@PutMapping("/{planetaID}")
 	@Transactional
+	@CacheEvict(value = "listaPlanetas", allEntries = true)
 	public ResponseEntity<PlanetaDto> atualizar(@PathVariable Long planetaID, @RequestBody @Valid AtualizaPlanetaForm form){
 
 		Optional<Planeta> planetaOptional = planetaRepository.findById(planetaID);
@@ -90,6 +93,7 @@ public class PlanetaController {
 	}
 
 	@DeleteMapping("/{planetaID}")
+	@CacheEvict(value = "listaPlanetas", allEntries = true)
 	public ResponseEntity<?> remove(@PathVariable Long planetaID){
 
 		Optional<Planeta> planetaOptional = planetaRepository.findById(planetaID);

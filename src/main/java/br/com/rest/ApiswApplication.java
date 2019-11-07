@@ -13,5 +13,4 @@ public class ApiswApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ApiswApplication.class, args);
 	}
-
 }

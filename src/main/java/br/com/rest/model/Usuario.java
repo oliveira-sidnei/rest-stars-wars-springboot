@@ -23,7 +23,4 @@ public class Usuario {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-    
-    
-
 }
