@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import br.com.rest.model.Usuario;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -32,7 +33,7 @@ public class TokenService {
 		return Jwts.builder().setExpiration(dataExpiracao)
 				.setIssuedAt(dataAtual)
 				.setIssuer("APISW")
-				.setSubject(usuario.getUsername())
+				.setSubject(usuario.getCodigo().toString())
 				.signWith(SignatureAlgorithm.HS256, secret).compact();
 		
 	}
@@ -45,5 +46,12 @@ public class TokenService {
 		} catch (Exception e) {
 			return false;
 		} 
+	}
+
+	public Long getUsuarioId(String token) {
+		if(token == null || token.isEmpty()) return null;
+			
+		Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+		return claims.getSubject() == null ? null : new Long(claims.getSubject());
 	}
 }

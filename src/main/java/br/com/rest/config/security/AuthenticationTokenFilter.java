@@ -7,9 +7,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.mysql.cj.util.StringUtils;
+
+import br.com.rest.model.Usuario;
+import br.com.rest.repository.UsuarioRepository;
 
 public class AuthenticationTokenFilter extends OncePerRequestFilter{
 
@@ -17,10 +22,13 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter{
 	
 	private TokenService tokenService;
 	
+	private UsuarioRepository repository;
 	
-	public AuthenticationTokenFilter(TokenService tokenService) {
+	
+	public AuthenticationTokenFilter(TokenService tokenService, UsuarioRepository repository) {
 	
 		this.tokenService = tokenService;
+		this.repository = repository;
 	}
 
 	@Override
@@ -29,8 +37,13 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter{
 
 		String token  = recuperaToken(request.getHeader("Authorization"));
 		
-		System.out.println(tokenService.isValid(token));
+		if(token != null && !token.isEmpty()) {
+			Usuario usuario = repository.findById(tokenService.getUsuarioId(token)).get();
 
+			SecurityContextHolder.getContext()
+			.setAuthentication(new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities()));
+		}
+		
 		filterChain.doFilter(request, response);
 		
 	}
@@ -43,5 +56,4 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter{
 		
 		return token == null || token.isEmpty() ? null : token;
 	}
-
 }
